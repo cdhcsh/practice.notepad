@@ -36,11 +36,11 @@
             $.ajax({
                 type: "POST",
                 url: "/memo",
-                data: {},
+                data: { 'url_give': $('#post-url').val(), 'comment_give': $('#post-comment').val() },
                 success: function (response) { // 성공하면
                     console.log(response)
                     if (response["result"] == "success") {
-                        alert(response["msg"]);
+                        showArticles();
                     }
                 }
             });
@@ -65,10 +65,30 @@
                 data: {},
                 success: function (response) { // 성공하면
                     if (response["result"] == "success") {
-                        alert(response["msg"]);
+                        let articles = response['articles'];
+                        for (let i = 0; i < articles.length; i++) {
+                            $('#card-box').append(makeCard(articles[i]));
+                        }
                     }
                 }
             });
+        }
+        function makeCard(article) {
+            let url = article['url'];
+            let title = article['title'];
+            let desc = article['desc'];
+            let comment = article['comment'];
+            let img = article['img'];
+            let temp =
+                `<div class="card">
+                    <img class="card-img-top" src="${img}" alt="card img top">
+                    <div class="card-body">
+                        <a href="${url}" class="card-title">${title}</a>
+                        <p class="card-text">${desc}</p>
+                        <p class="card-text comment">${comment}</p>
+                    </div>
+                </div>`
+            return temp;
         }
 
     </script>
