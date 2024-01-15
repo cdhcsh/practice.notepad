@@ -24,13 +24,10 @@ def post_articles():
 
 @app.route("/memo/delete",methods=['POST'])
 def delete_articles():
-    print(request.form['url_give'])
     db.article.delete_one({'url':request.form['url_give']})
     return jsonify({'result':'success'})
 
 def scrapping(url,comment):
-    print(url)
-    print(comment)
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
     data = requests.get(url, headers=headers)
     soup = BeautifulSoup(requests.get(url, headers=headers).text,'html.parser')
