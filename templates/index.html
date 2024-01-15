@@ -27,6 +27,12 @@
             color: blue;
             font-weight: bold;
         }
+
+        .img-box {
+            background-position: center;
+            background-size: cover;
+            height: auto;
+        }
     </style>
     <script>
         $(document).ready(function () {
@@ -37,7 +43,7 @@
                 type: "POST",
                 url: "/memo",
                 data: { 'url_give': $('#post-url').val(), 'comment_give': $('#post-comment').val() },
-                success: function (response) { // 성공하면
+                success: function (response) {
                     console.log(response)
                     if (response["result"] == "success") {
                         showArticles();
@@ -63,12 +69,24 @@
                 type: 'GET',
                 url: '/memo',
                 data: {},
-                success: function (response) { // 성공하면
+                success: function (response) {
                     if (response["result"] == "success") {
                         let articles = response['articles'];
                         for (let i = 0; i < articles.length; i++) {
                             $('#card-box').append(makeCard(articles[i]));
                         }
+                    }
+                }
+            });
+        }
+        function deleteArticles(url) {
+            $.ajax({
+                type: 'POST',
+                url: '/memo/delete',
+                data: { 'url_give': url },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        showArticles();
                     }
                 }
             });
@@ -81,11 +99,15 @@
             let img = article['img'];
             let temp =
                 `<div class="card">
-                    <img class="card-img-top" src="${img}" alt="card img top">
+                    <img class="card-img-top" src="${img}"" alt="card img top">
+                    
+                        </img>
                     <div class="card-body">
                         <a href="${url}" class="card-title">${title}</a>
                         <p class="card-text">${desc}</p>
-                        <p class="card-text comment">${comment}</p>
+                        <p class="card-text comment">${comment}
+                            <a href="JavaScript:deleteArticles('${url}')" class="p-1 px-2 btn btn-sm btn-danger float-right">지우기</a>
+                        </p>
                     </div>
                 </div>`
             return temp;
@@ -97,7 +119,7 @@
 
 <body>
     <div class="jumbotron w-75 center">
-        <h1 class="display-4">나의 메모장</h1>
+        <h1 class="display-4" ;">나의 메모장</h1>
         <p class="lead">중요한 링크를 저장하고, 나중에 볼 수 있어요.</p>
         <hr class="my-4" />
         <p class="lead"><button onclick="postOpenClose()" id="btn-post-box" type="button" class="btn btn-primary">포스팅 박스

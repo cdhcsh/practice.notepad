@@ -20,7 +20,13 @@ def get_articles():
 def post_articles():
     data = scrapping(request.form['url_give'],request.form['comment_give'])
     db.article.insert_one(data)
-    return jsonify({'result':'success'});
+    return jsonify({'result':'success'})
+
+@app.route("/memo/delete",methods=['POST'])
+def delete_articles():
+    print(request.form['url_give'])
+    db.article.delete_one({'url':request.form['url_give']})
+    return jsonify({'result':'success'})
 
 def scrapping(url,comment):
     print(url)
